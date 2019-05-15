@@ -128,15 +128,12 @@ func main() {
 				} else {
 					// alert Details
 					alertDetail := response2.Alert
-					// pull out PS custom tags
-					alertType := Find(alert.Tags, "alert_type: ")
-					cluster := Find(alert.Tags, "cluster: ")
-					hostname := Find(alert.Tags, "hostname: ")
+					alertURL := "https://prowlerio.app.opsgenie.com/alert/detail/" + alert.Id
 					// create and append grafana row
 					row := []grada.Row{
 						{
 							alert.Message,
-							alertType,
+							alertURL,
 							priorityMap[alert.Priority],
 							alert.Status,
 							alert.IsSeen,
@@ -145,9 +142,7 @@ func main() {
 							alert.UpdatedAt,
 							alert.TinyID,
 							alert.Owner,
-							cluster,
-							hostname,
-							alertDetail.Description,
+							alertDetail.Graph,
 						},
 					}
 					// acked and unacked in their own slice
@@ -160,7 +155,7 @@ func main() {
 						rowsOpenCount[alert.Priority]++
 						rows = append(rows, row...)
 					}
-					
+
 				}
 			}
 		}
